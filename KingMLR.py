@@ -33,7 +33,7 @@ regressor.fit(X_train, y_train)
 # Predict test results
 y_pred = regressor.predict(X_test)
 
-score = r2_score(y_test, y_pred)
+score = metrics.r2_score(y_test, y_pred)
 print(score)
 # R^2 of .696
 
@@ -73,7 +73,7 @@ regressor2.fit(X_train, y_train)
 # Predict test results
 y_pred = regressor2.predict(X_test)
 
-score2 = r2_score(y_test, y_pred)
+score2 = metrics.r2_score(y_test, y_pred)
 print(score2)
 
 # Residuals
@@ -118,7 +118,7 @@ regressor3.fit(X_train, y_train)
 
 # Predict test results
 y_pred = regressor3.predict(X_test)
-score3 = r2_score(y_test, y_pred)
+score3 = metrics.r2_score(y_test, y_pred)
 print(score3)
 
 
