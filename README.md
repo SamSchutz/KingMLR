@@ -74,5 +74,58 @@ data.hist(column='price', bins=100)
 ```
 ![histogram](/Graphics/hist1.png)
 
+Looks to be very right_skewed, and being that we only have positive values for price--the log transformation seems to be a good option.
 
+```Python
+trans = data.copy()
+trans['price'] = (np.log10(trans['price']))
+```
 
+Time to preform another MLR. This model gives an R-Squared of `.768`
+
+![residuals2](/Graphics/Model2resid.png)
+
+```
+Mean Absolute Error for model2: 0.08583999261794312
+Mean Squared Error for model2: 0.012273237133316262
+Root Mean Squared Error for model2: 0.11078464303916975
+```
+
+The trade-off for using this log transformation is not the errors are adjusted. But there being a much higher R-Squared and more linear and ordered residuals it is clear our model will preform better. Linear regression assumes that our data is neither left-skewed or right-skewed so any progress made towards normalizing our variables the better our model will do as a multiple linear regression.
+
+## Model 3: MLR with log10(price) and box-cox transformations
+
+Now would be a good time to look at some of our predictor variables and see if they are skewed using the `seaborn` pairplot. A word of caution: **This function takes a decent amount of time to run considering the size of our dataset.**
+```Python
+sns.pairplot(X_test)
+```
+
+![pairplot](/Graphics/pairplot.png)
+
+From this pair plot I see three variables that I want to tackle right away. There are many to transform however, but I will use these at a later date in Model4. At this point I want to see how far I can get my errors down from Model2m and some other more extensive R code I have written making use of Backwards step methods.
+
+Now to transform:
+```Python
+trans2 = trans.copy()
+f = sstats.boxcox(trans2['sqft_lot15'])
+trans2['sqft_lot15'] = f[0]
+f2 = sstats.boxcox(trans2['sqft_above'])
+trans2['sqft_above'] = f2[0]
+f3 = sstats.boxcox(trans2['sqft_living'])
+trans2['sqft_living'] = f3[0]
+```
+
+And now to Regress!
+```
+R-Squared: 0.7726
+```
+
+![residuals3](/Graphics/Model3resid.png)
+
+```
+Mean Absolute Error for model3: 0.08481647450619828
+Mean Squared Error for model3: 0.012040401536251702
+Root Mean Squared Error for model3: 0.10972876348638812
+```
+
+A very slight improvement over model 2, as our residuals are squished further to the linear normal. It seems our model has come a long way since model 1! 
