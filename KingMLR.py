@@ -16,7 +16,7 @@ from yellowbrick.regressor import ResidualsPlot
 data = pd.read_csv('King County Homes.csv')
 data = data.drop(labels='ID', axis=1)
 
-
+data.describe()
 
 # MODEL 1 - BASE Multiple Linear Regression model
 
