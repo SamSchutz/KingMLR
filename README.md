@@ -184,6 +184,6 @@ Residuals:
 
 Gives us a Mean Absolute error of **130470.19222297132** and a similar residuals plot to the first two Linear Regression models. 
 
-#Conclusion
+# Conclusion
 
 Overall it seems that Multiple Linear Regression is not a good fit for this type of problem--especially when ensemble bagged and boosted methods exist. However, this was great practice working with statistical transformations and a general deep-dive into scikit-learn's LinearRegression() model.
