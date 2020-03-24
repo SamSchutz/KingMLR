@@ -31,6 +31,10 @@ min    7.500000e+04      0.000000  ...     399.000000     651.000000
 75%    6.488760e+05      4.000000  ...    2370.000000   10080.000000
 max    7.700000e+06     33.000000  ...    6210.000000  871200.000000
 ```
+#### Pairplot
+
+
+
 #### Removing Features
 Because I'm not using any tree-based models--longitude, latitude, and zip would just confuse the model.
 ```Python
@@ -91,7 +95,7 @@ array([237472.60747177, 238184.50756892, 229002.01176648, 238158.57318789,
 ```Python
 print("Average Mean Absolute Error: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std()*2))
 ```
-Average Mean Absolute Error: 235966.27 (+/- 7019.61)
+Average Mean Absolute Error: **235966.27 (+/- 7019.61)**
 
 **Pretty horrible**, which is to be expected.
 
@@ -104,7 +108,7 @@ scores = cross_val_score(mlr1, X, y,
                          cv=5)
 print("Average Mean Absolute Error: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std()*2))
 ```
-Average Mean Absolute Error: 141855.23 (+/- 8407.33)
+Average Mean Absolute Error: **141855.23 (+/- 8407.33)**
 
 ## Model 3: Scikit-Learn's Normalized LinearRegression()
 
@@ -116,7 +120,7 @@ scores = cross_val_score(mlr2, X, y,
 print("Average Mean Absolute Error: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std()*2))
 
 ```
-Average Mean Absolute Error: 141860.65 (+/- 8394.38)
+Average Mean Absolute Error: **141860.65 (+/- 8394.38)**
 
 Looks about the same to me. Nothing really has changed in the residuals either.
 
@@ -135,7 +139,31 @@ metrics.mean_absolute_error(y_test, m.predict(X_test))
 array([ True,  True,  True, False,  True,  True,  True,  True,  True,
         True,  True,  True,  True,  True,  True,  True])
 ```
-It looks like here it only removed one feature: `sqft_lot` and return a mean absolute error of `235427.88012998947`. Pretty trash. Something might be wrong in the way I've set up the scoring, but it's not handling this data well.
+It looks like here it only removed one feature: `sqft_lot` and return a mean absolute error of **235427.88012998947**. Pretty trash. Something might be wrong in the way I've set up the scoring, but it's not handling this data well.
 
-## Model 5: MLR with log10(price) transform
+## Model 5: MLR with log10(price) and Box-Cox transforms on skewed predictors
 
+```Python
+data3 = data2.copy()
+f = sstats.boxcox(data3['sqft_lot15'])
+data3['sqft_lot15'] = f[0]
+f2 = sstats.boxcox(data3['sqft_above'])
+data3['sqft_above'] = f2[0]
+f3 = sstats.boxcox(data3['sqft_living'])
+data3['sqft_living'] = f3[0]
+
+X3 = data3.iloc[:, 1:]
+y3 = data3.iloc[:, 0]
+
+X_train, X_test, y_train, y_test = train_test_split(X3, y3, test_size = 0.2,
+                                                    random_state = 0)
+mlr4 = LinearRegression()
+mlr4.fit(X_train, y_train)
+
+metrics.mean_absolute_error(10**y_test, 10**mlr4.predict(X_test))
+```
+Gives us a Mean Absolute error of **130470.19222297132** and a similar residuals plot to the first two Linear Regression models. 
+
+#Conclusion
+
+Overall it seems that Multiple Linear Regression is not a good fit for this type of problem--especially when ensemble bagged and boosted methods exist. However, this was great practice working with statistical transformations and a general deep-dive into scikit-learn's LinearRegression() model.
