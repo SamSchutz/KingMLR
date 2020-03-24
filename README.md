@@ -33,7 +33,9 @@ max    7.700000e+06     33.000000  ...    6210.000000  871200.000000
 ```
 #### Pairplot
 
+![pairplot](/Graphics/pairplot.png)
 
+It looks like some variable have right-skewed distributions. Something we will fix with transformations down the road.
 
 #### Removing Features
 Because I'm not using any tree-based models--longitude, latitude, and zip would just confuse the model.
@@ -67,6 +69,9 @@ dtype: bool
 ```
 #### Mean
 And finally finding the mean value of 'price' to have a baseline for looking at how our errors stack up using `data['price'].mean()` which return the mean price in USD.
+
+Histogram:
+![hist](/Graphics/hist1.png)
 
 ```
 542802.0316920986
@@ -110,6 +115,10 @@ print("Average Mean Absolute Error: %0.2f (+/- %0.2f)" % (scores.mean(), scores.
 ```
 Average Mean Absolute Error: **141855.23 (+/- 8407.33)**
 
+Residuals:
+
+![resid1](/Graphics/resid1.png)
+
 ## Model 3: Scikit-Learn's Normalized LinearRegression()
 
 ```Python
@@ -121,6 +130,10 @@ print("Average Mean Absolute Error: %0.2f (+/- %0.2f)" % (scores.mean(), scores.
 
 ```
 Average Mean Absolute Error: **141860.65 (+/- 8394.38)**
+
+residuals:
+
+![resid2](/Graphics/resid2.png)
 
 Looks about the same to me. Nothing really has changed in the residuals either.
 
@@ -162,6 +175,13 @@ mlr4.fit(X_train, y_train)
 
 metrics.mean_absolute_error(10**y_test, 10**mlr4.predict(X_test))
 ```
+Only transforming the price really messes up our residuals so let's not do that.
+Log only residuals:
+![resid4](/Graphics/resid4.png)
+
+Residuals:
+![resid3](/Graphics/resid3.png)
+
 Gives us a Mean Absolute error of **130470.19222297132** and a similar residuals plot to the first two Linear Regression models. 
 
 #Conclusion
