@@ -1,6 +1,10 @@
 # KingMLR
 This is a Python data project using scikit-learn's Multiple Linear Regression models and feature power tranformations to predict home values in King County, WA. This project uses the following libraries: `numpy matplotlib pandas seaborn scipy scikit-learn yellowbrick`
 
+# FUTURE PLANS
+
+Didn't do anything with the **multicollinearity** of the dataset which I know know is a huge problem for MLR performance. Will do a entire rewrite and redo of the project in the next few days. 
+
 ## Files 
 - King County Homes.csv - (16187 X 20) dataset with house prices and predictors 
 - King County Homes - Multiple Linear Regression.ipynb - where all of the analysis and model implementation is done
